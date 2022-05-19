@@ -31,8 +31,12 @@ MVS可以简单地理解为多视立体几何，即通过两个（双目）或�
 
 在MVSNet之后，也有非常多的工作在其基础上进行了改进<br>
 ## MVS pipeline
-首先明确任务：深度估计。具体来说就是给定一张图像$I_1$(reference image)，推断得到深度图$D\in\mathbb{R}^{H'\times W'}$的过程。对于MVS中的深度估计而言，其输入是一系列的图像$\{I_i\in\mathbb{R}^{C\times H\times W }\}_{i=1}^{N}$
-第一步
+首先明确任务：深度估计。具体来说就是给定一张图像$I_1$(reference image)，推断得到深度图$D\in\mathbb{R}^{H'\times W'}$的过程。对于MVS中的深度估计而言，其输入是一系列的图像$\{I_i\in\mathbb{R}^{C\times H\times W }\}_{i=1}^{N}$<br>
+第一步是通过特征提取网络得到所有输入图像的feature map$\{F_i\in\mathbb{R}^{C'\times H'\times W'}\}^N_{i=1}$，这里的特征提取网络是一个共享权重的2D CNN（当然也可以选择其他backbone）<br>
+正如前面所言，基于学习的MVS方法是建立在cost volume基础上的。这样的cost volume又是基于深度值假设$\{d_i\in\mathbb{R}^{H'\times W'}\}^M_{i=1}$，这里面$d_1$是最小的深度值，$d_M$是最大的深度值。而$\{d_i\in\mathbb{R}^{H'\times W'}\}^M_{i=1}$就是在这个范围内取值的<br>
+这样，将每个source image的feature map可微单应性变换至reference image的相机光锥中，就可以得到feature volume$\{V_i\in\mathbb{R}^{M\times C'\times H'\times W'}\}^M_{i=1}$<br>
+第$i$个视角和reference视角间的单应性变换如下：
+$$H_i(d)=dK_iT_iT_1^{-1}K_1^{-1}$$
 
 
 
